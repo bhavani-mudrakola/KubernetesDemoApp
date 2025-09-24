@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        KUBECONFIG = "${env.USERPROFILE}\\.kube\\config"
+    }
     stages {
         /*stage('checkout') {
             steps {
