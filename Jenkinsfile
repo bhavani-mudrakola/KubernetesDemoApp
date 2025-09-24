@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    stages {
+        /*stage('checkout') {
+            steps {
+                echo "Cloning repo..."
+                git url: "https://github.com/bhavani-mudrakola/SamplePythonFlaskApp.git", branch: 'main'
+            }
+        }*/
+        stage('Build Docker Image') {
+            steps {
+                echo "Build Docker Image"
+                bat "docker build -t kubdemoapp:v1 ."
+            }
+        }
+        stage('push Docker Image to Docker Hub') {
+            steps {
+                echo "push Docker Image to Docker Hub"
+                bat "docker tag kubedemoapp:v1 bhavani765/sample:kubeimage1"               
+                    
+                bat "docker push bhavani765/sample:kubeimage1"
+                
+            }
+        }
+        stage('Deploy to Kubernetes') { 
+            steps { 
+                    // apply deployment & service 
+                    bat 'kubectl apply -f deployment.yaml' 
+                    bat 'kubectl apply -f service.yaml' 
+            } 
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
