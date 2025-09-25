@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        KUBECONFIG = "C:\\Users\\Admin\\.kube\\config"
+       // KUBECONFIG = "C:\\Users\\Admin\\.kube\\config"
     }
     stages {
         /*stage('checkout') {
@@ -32,9 +32,13 @@ pipeline {
         }
         stage('Deploy to Kubernetes') { 
             steps { 
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    bat 'kubectl apply -f deployment.yaml --validate=false'
+                    bat 'kubectl apply -f service.yaml'
+                }
                     // apply deployment & service 
-                    bat 'kubectl apply -f deployment.yaml --validate=false' 
-                    bat 'kubectl apply -f service.yaml' 
+                    //bat 'kubectl apply -f deployment.yaml --validate=false' 
+                    //bat 'kubectl apply -f service.yaml' 
             } 
         }
     }
