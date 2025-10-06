@@ -2,12 +2,6 @@ pipeline {
     agent any
    
     stages {
-        /*stage('checkout') {
-            steps {
-                echo "Cloning repo..."
-                git url: "https://github.com/bhavani-mudrakola/SamplePythonFlaskApp.git", branch: 'main'
-            }
-        }*/
         stage('Build Docker Image') {
             steps {
                 echo "Build Docker Image"
@@ -30,13 +24,9 @@ pipeline {
         }
         stage('Deploy to Kubernetes') { 
             steps { 
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                    bat 'kubectl apply -f deployment.yaml --validate=false'
-                    bat 'kubectl apply -f service.yaml'
-                }
                     // apply deployment & service 
-                    //bat 'kubectl apply -f deployment.yaml --validate=false' 
-                    //bat 'kubectl apply -f service.yaml' 
+                    bat 'kubectl apply -f deployment.yaml --validate=false' 
+                    bat 'kubectl apply -f service.yaml' 
             } 
         }
     }
